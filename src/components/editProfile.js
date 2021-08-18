@@ -1,18 +1,17 @@
 import React from "react";
 import {BASE_URL} from '../constants'
-class Register extends React.Component {
+class EditProfile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       first_name: '',
       last_name: '',
       email: '',
-      password: ''
+      errors: {},
     };
     this.handleChangeFirstName = this.handleChangeFirstName.bind(this);
     this.handleChangeLastName = this.handleChangeLastName.bind(this);
     this.handleChangeEmail = this.handleChangeEmail.bind(this);
-    this.handleChangePassword = this.handleChangePassword.bind(this);
  
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -20,17 +19,39 @@ class Register extends React.Component {
   handleChangeFirstName(event) {this.setState({first_name: event.target.value}); }
   handleChangeLastName(event) {this.setState({last_name: event.target.value}); }
   handleChangeEmail(event) {this.setState({email: event.target.value}); }
-  handleChangePassword(event) {this.setState({password: event.target.value}); }
 
-  handleSubmit(event) {
-    event.preventDefault();
-    console.log(this.state)
-
-    fetch(`${BASE_URL}user`, {
-      method: 'POST',
+  getUserData(){
+    fetch(`${BASE_URL}user/profile`, {
+      method: 'GET',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
+        'auth_token': localStorage.getItem("auth_token"),
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      this.setState({
+        first_name: data.first_name,
+        last_name: data.first_name,
+        email: data.email,
+      })
+    })
+  }
+
+  componentDidMount(){
+    this.getUserData();
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+
+    fetch(`${BASE_URL}user`, {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'auth_token': localStorage.getItem("auth_token"),
       },
       body: JSON.stringify(this.state)
     })
@@ -59,11 +80,6 @@ class Register extends React.Component {
         </div>
 
         <div>
-          <label>Password:</label>
-          <input type="password" value={this.state.password} onChange={this.handleChangePassword} />
-        </div>
-
-        <div>
           <input type="submit" value="Submit" />
         </div>
 
@@ -72,4 +88,4 @@ class Register extends React.Component {
   }
 }
 
-export default Register;
+export default EditProfile;

@@ -5,7 +5,8 @@ class Login extends React.Component {
     super(props);
     this.state = {
       email: '',
-      password: ''
+      password: '',
+      errors: {},
     };
     this.handleChangeEmail = this.handleChangeEmail.bind(this);
     this.handleChangePassword = this.handleChangePassword.bind(this);
@@ -20,7 +21,7 @@ class Login extends React.Component {
     event.preventDefault();
     console.log(this.state)
 
-    fetch(`${BASE_URL}users/login`, {
+    fetch(`${BASE_URL}user/login`, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -28,6 +29,13 @@ class Login extends React.Component {
       },
       body: JSON.stringify(this.state)
     })
+    .then(response => response.json())
+    .then(data => {
+      localStorage.setItem("auth_token", data.auth_token)
+      localStorage.setItem("logged-in", true)
+      this.props.history.push('/');
+    })
+    .catch(err => console.log(err))
   }
 
   render() {
