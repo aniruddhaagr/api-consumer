@@ -45,7 +45,6 @@ class Login extends React.Component {
         this.props.history.push('/');
     })
     .catch(errors => {
-      debugger
       errors.json().then(err => this.setState({errors: err.message}))
     })
   }

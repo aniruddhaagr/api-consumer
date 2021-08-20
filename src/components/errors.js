@@ -8,7 +8,7 @@ class Errors extends React.Component {
 
   displayError() {
     if (this.props.errorMessages) {
-      return this.props.errorMessages.map((err) => <CustomError error={err}/>)
+      return this.props.errorMessages.map((err, index) => <CustomError error={err} key={index}/>)
     }
     return []
   }

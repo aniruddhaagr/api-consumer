@@ -1,5 +1,6 @@
 import React from "react";
 import {BASE_URL} from '../constants'
+import Errors from './errors'
 class EditProfile extends React.Component {
   constructor(props) {
     super(props);
@@ -7,7 +8,7 @@ class EditProfile extends React.Component {
       first_name: '',
       last_name: '',
       email: '',
-      errors: {},
+      errors: [],
     };
     this.handleChangeFirstName = this.handleChangeFirstName.bind(this);
     this.handleChangeLastName = this.handleChangeLastName.bind(this);
@@ -55,15 +56,27 @@ class EditProfile extends React.Component {
       },
       body: JSON.stringify(this.state)
     })
-    .then(response => response.json())
+    .then(response => {
+      if (response.ok) {
+        return response.json()  
+      } else {
+        return Promise.reject(response) 
+      }
+    })
     .then(data => {
       this.props.history.push('/');
+    })
+    .catch(errors => {
+      errors.json().then(err => this.setState({errors: err.message}))
     })
   }
 
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
+        { !!this.state.errors.length &&
+          <Errors errorMessages={this.state.errors}/>
+        }
         <div>
           <label>First Name:</label>
           <input type="text" value={this.state.first_name} onChange={this.handleChangeFirstName} />
