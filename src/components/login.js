@@ -1,4 +1,7 @@
 import React from "react";
+
+import Errors from './errors'
+
 import {BASE_URL} from '../constants'
 class Login extends React.Component {
   constructor(props) {
@@ -6,7 +9,7 @@ class Login extends React.Component {
     this.state = {
       email: '',
       password: '',
-      errors: {},
+      errors: [],
     };
     this.handleChangeEmail = this.handleChangeEmail.bind(this);
     this.handleChangePassword = this.handleChangePassword.bind(this);
@@ -29,22 +32,30 @@ class Login extends React.Component {
       },
       body: JSON.stringify(this.state)
     })
-    .then(response => response.json())
+    .then(response => {
+      if (response.ok) {
+        return response.json()  
+      } else {
+        return Promise.reject(response) 
+      }
+    })
     .then(data => {
-      if (!!data.auth_token) {
         localStorage.setItem("auth_token", data.auth_token)
         localStorage.setItem("logged-in", true)
         this.props.history.push('/');
-      } else {
-        alert(data.message)
-      }
     })
-    .catch(err => console.log(err))
+    .catch(errors => {
+      debugger
+      errors.json().then(err => this.setState({errors: err.message}))
+    })
   }
 
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
+        { !!this.state.errors.length &&
+          <Errors errorMessages={this.state.errors}/>
+        }
         <div>
           <label>Email:</label>
           <input type="text" value={this.state.email} onChange={this.handleChangeEmail} />
