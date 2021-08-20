@@ -31,9 +31,13 @@ class Login extends React.Component {
     })
     .then(response => response.json())
     .then(data => {
-      localStorage.setItem("auth_token", data.auth_token)
-      localStorage.setItem("logged-in", true)
-      this.props.history.push('/');
+      if (!!data.auth_token) {
+        localStorage.setItem("auth_token", data.auth_token)
+        localStorage.setItem("logged-in", true)
+        this.props.history.push('/');
+      } else {
+        alert(data.message)
+      }
     })
     .catch(err => console.log(err))
   }
