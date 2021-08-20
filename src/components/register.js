@@ -28,6 +28,7 @@ class Register extends React.Component {
     event.preventDefault();
     console.log(this.state)
 
+
     fetch(`${BASE_URL}user`, {
       method: 'POST',
       headers: {
@@ -40,17 +41,14 @@ class Register extends React.Component {
       if (response.ok) {
         return response.json()
       } else {
-        return Promise.reject(response.json())        
+        return Promise.reject(response)        
       }
     })
     .then(data => {
       this.props.history.push('/');
     })
     .catch(errors => {
-      return errors
-    })
-    .then(err => {
-      this.setState({errors: err.message})
+      errors.json().then(err => this.setState({errors: err.message}))
     })
   }
 
