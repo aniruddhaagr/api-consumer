@@ -45,7 +45,7 @@ class Register extends React.Component {
       }
     })
     .then(data => {
-      this.props.history.push('/');
+      this.props.history.push('/login');
     })
     .catch(errors => {
       errors.json().then(err => this.setState({errors: err.message}))

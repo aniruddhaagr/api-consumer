@@ -64,7 +64,7 @@ class EditProfile extends React.Component {
       }
     })
     .then(data => {
-      this.props.history.push('/');
+      this.props.history.push('/profile');
     })
     .catch(errors => {
       errors.json().then(err => this.setState({errors: err.message}))
