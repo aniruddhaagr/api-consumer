@@ -34,7 +34,7 @@ class EditProfile extends React.Component {
     .then(data => {
       this.setState({
         first_name: data.first_name,
-        last_name: data.first_name,
+        last_name: data.last_name,
         email: data.email,
       })
     })
